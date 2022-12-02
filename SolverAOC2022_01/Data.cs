@@ -13,7 +13,6 @@ namespace SolverAOC2022_01
     private List<List<int>> items = new List<List<int>>();
     public Data(string input)
     {
-      List<List<int>> data;
       using (StringReader sr = new StringReader(input))
       {
         string line;
