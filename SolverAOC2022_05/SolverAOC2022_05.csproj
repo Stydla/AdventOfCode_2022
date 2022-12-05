@@ -77,8 +77,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Data.cs" />
+    <Compile Include="Move.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Stack.cs" />
+    <Compile Include="Stacks.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\AdventOfCode\Interfaces\Interfaces.csproj">
