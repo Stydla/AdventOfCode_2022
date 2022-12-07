@@ -33,6 +33,66 @@ namespace SolverAOC2022_07
       Size = FilesSum + FoldersSum;
     }
 
+    internal string Print()
+    {
+      StringBuilder sb = new StringBuilder();
+      string offset = BuildOffset();
+      sb.AppendLine(offset + Name);
+      foreach(Folder f in SubFolders)
+      {
+        sb.Append(f.Print());
+      }
+      return sb.ToString();
+    }
+
+    internal List<string> AllFolderNames()
+    {
+      List<string> ret = new List<string>();
+      ret.Add(this.Name);
+      foreach(Folder f in SubFolders)
+      {
+        ret.AddRange(f.AllFolderNames());
+      }
+      return ret;
+    }
+
+    private string BuildOffset()
+    {
+      List<string> offset = new List<string>();
+      Folder parent = this.Parent;
+      Folder tmp = this;
+      bool L_used = false;
+      while (parent != null)
+      {
+        if(parent.SubFolders.Last() == tmp)
+        {
+          if(L_used)
+          {
+            offset.Add("  ");
+          } else
+          {
+            offset.Add("┗━");
+            L_used = true;
+          }
+        } else
+        {
+          if(!L_used)
+          {
+            offset.Add("┣━");
+            L_used = true;
+          } else
+          {
+            offset.Add("┃ ");
+          }
+          
+        }
+        tmp = parent;
+        parent = tmp.Parent;
+      }
+      offset.Reverse();
+      return string.Join("", offset);
+    }
+
     internal void Solve2(int needToFree, ref int currentSmallest)
     {
       foreach(Folder f in SubFolders)

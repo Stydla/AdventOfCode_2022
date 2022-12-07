@@ -55,6 +55,9 @@ namespace SolverAOC2022_07
           }
         }
       }
+
+      //string tree = FileSystem.Print();
+      //List<string> allFolders = FileSystem.AllFolderNames().OrderBy(x => x).ToList();
     }
 
     internal int Solve1()

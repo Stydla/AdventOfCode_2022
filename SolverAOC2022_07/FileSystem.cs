@@ -30,5 +30,16 @@ namespace SolverAOC2022_07
       Root.Solve2(needToFree, ref currentSmallest);
       return currentSmallest;
     }
+
+    public string Print()
+    {
+      return Root.Print();
+    }
+
+    public List<string> AllFolderNames ()
+    {
+      return Root.AllFolderNames();
+    }
+
   }
 }
