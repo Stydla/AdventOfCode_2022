@@ -10,18 +10,22 @@ namespace SolverAOC2022_10
   public class Program : BaseAdventSolver, IAdventSolver
   {
 
-    public override string SolverName => "SolverAOC2022_10"/*TODO: Task Name*/;
+    public override string SolverName => "Day 10: Cathode-Ray Tube"/*TODO: Task Name*/;
 
     public override string InputsFolderName => "SolverAOC2022_10";
 
     public override string SolveTask1(string InputData)
     {
-      throw new NotImplementedException();
+      Data d = new Data(InputData);
+      int res = d.Solve1();
+      return res.ToString();
     }
 
     public override string SolveTask2(string InputData)
     {
-      throw new NotImplementedException();
+      Data d = new Data(InputData);
+      string res = d.Solve2();
+      return res;
     }
   }
 }
