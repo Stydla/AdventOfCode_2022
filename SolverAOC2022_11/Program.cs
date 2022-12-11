@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -10,18 +11,22 @@ namespace SolverAOC2022_11
   public class Program : BaseAdventSolver, IAdventSolver
   {
 
-    public override string SolverName => "SolverAOC2022_11"/*TODO: Task Name*/;
+    public override string SolverName => "Day 11: Monkey in the Middle"/*TODO: Task Name*/;
 
     public override string InputsFolderName => "SolverAOC2022_11";
 
     public override string SolveTask1(string InputData)
     {
-      throw new NotImplementedException();
+      Data d = new Data(InputData);
+      BigInteger res = d.Solve1();
+      return res.ToString();
     }
 
     public override string SolveTask2(string InputData)
     {
-      throw new NotImplementedException();
+      Data d = new Data(InputData);
+      BigInteger res = d.Solve2();
+      return res.ToString();
     }
   }
 }
