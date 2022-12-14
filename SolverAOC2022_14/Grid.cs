@@ -181,7 +181,7 @@ namespace SolverAOC2022_14
         }
         if (pourField.Value == 'o') break;
       }
-      Console.WriteLine(Print());
+      
     }
 
     private bool MoveSand(Field field)
