@@ -16,12 +16,16 @@ namespace SolverAOC2022_15
 
     public override string SolveTask1(string InputData)
     {
-      throw new NotImplementedException();
+      Data d = new Data(InputData);
+      long res = d.Solve1();
+      return res.ToString();
     }
 
     public override string SolveTask2(string InputData)
     {
-      throw new NotImplementedException();
+      Data d = new Data(InputData);
+      long res = d.Solve2();
+      return res.ToString();
     }
   }
 }
