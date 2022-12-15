@@ -15,6 +15,7 @@ namespace SolverAOC2022_15
     private string inputData;
 
     public long Y_Line { get; set; }
+    public long MaxSize { get; set; }
 
     public List<Sensor> Sensors = new List<Sensor>();
 
@@ -27,6 +28,7 @@ namespace SolverAOC2022_15
       using (StringReader sr = new StringReader(inputData))
       {
         Y_Line = long.Parse(sr.ReadLine());
+        MaxSize = long.Parse(sr.ReadLine());
 
         string line;
         while ((line = sr.ReadLine()) != null)
@@ -175,7 +177,25 @@ namespace SolverAOC2022_15
 
     internal long Solve2()
     {
-      throw new NotImplementedException();
+
+      long y = long.MinValue;
+      List<Interval> intervals = new List<Interval>();
+      for (long i = 0; i < MaxSize; i++)
+      {
+        intervals = GetIntervalsFor(i);
+
+        if(intervals.Count > 1)
+        {
+          y = i;
+          break;
+        }
+      }
+
+      long x = intervals[0].Points[1].Value + 1;
+
+
+
+      return x * 4000000 + y;
     }
   }
 }
