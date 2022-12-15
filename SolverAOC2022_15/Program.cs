@@ -10,7 +10,7 @@ namespace SolverAOC2022_15
   public class Program : BaseAdventSolver, IAdventSolver
   {
 
-    public override string SolverName => "SolverAOC2022_15"/*TODO: Task Name*/;
+    public override string SolverName => "Day 15: Beacon Exclusion Zone"/*TODO: Task Name*/;
 
     public override string InputsFolderName => "SolverAOC2022_15";
 
