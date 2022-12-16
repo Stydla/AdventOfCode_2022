@@ -12,6 +12,7 @@ namespace SolverAOC2022_16
   {
 
     public List<Valve> Items { get; set; } = new List<Valve>();
+    public long valvesId = 1;
 
     public Valves(string inputData)
     {
@@ -53,7 +54,8 @@ namespace SolverAOC2022_16
       {
         return v;
       }
-      v = new Valve(name);
+      v = new Valve(name, valvesId);
+      valvesId *= 2;
       Items.Add(v);
       return v;
     }

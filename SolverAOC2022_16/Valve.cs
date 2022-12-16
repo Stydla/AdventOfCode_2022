@@ -17,11 +17,16 @@ namespace SolverAOC2022_16
 
     public Dictionary<Valve, int> ValvesDistance { get; set; } = new Dictionary<Valve, int>();
     public Dictionary<Valve, int> ValvesDistanceNonZeroFlowRate { get; set; } = new Dictionary<Valve, int>();
+    public long ID { get; internal set; }
 
-    public Valve(string name)
+    
+
+    public Valve(string name, long id)
     {
       Name = name;
+      ID = id;
     }
+
 
     public void MeasureDistances(List<Valve> valves)
     {
@@ -65,7 +70,7 @@ namespace SolverAOC2022_16
 
     public override string ToString()
     {
-      return $"{Name}:{FlowRate}";
+      return $"{Name}({ID}):{FlowRate}";
     }
 
   }
