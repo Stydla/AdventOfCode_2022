@@ -86,14 +86,14 @@ namespace SolverAOC2022_13
 
       SortPackets(Packets);
 
-      StringBuilder sb = new StringBuilder();
-      foreach(Packet p in Packets)
-      {
-        sb.AppendLine(p.Line);
-      }
-      Console.WriteLine(sb.ToString());
-      Console.WriteLine();
-      Console.WriteLine();
+      //StringBuilder sb = new StringBuilder();
+      //foreach(Packet p in Packets)
+      //{
+      //  sb.AppendLine(p.Line);
+      //}
+      //Console.WriteLine(sb.ToString());
+      //Console.WriteLine();
+      //Console.WriteLine();
 
       var ps = Packets.Where(x => x.IsDividerPacket).ToList();
       int val1 = Packets.IndexOf(ps[0]) + 1;
