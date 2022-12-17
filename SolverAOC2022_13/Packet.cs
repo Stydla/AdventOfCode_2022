@@ -13,10 +13,13 @@ namespace SolverAOC2022_13
     public bool IsDividerPacket { get; set;} = false;
     public ItemList Items { get; set; }
 
-    public Packet(List<string> line)
+    public string Line { get; set; }
+
+    public Packet(List<string> line, string inputLine)
     {
       int index = 1;
       Items = new ItemList(line, ref index);
+      Line = inputLine;
 
     }
 

@@ -28,11 +28,11 @@ namespace SolverAOC2022_13
         while ((line = sr.ReadLine()) != null)
         {
           List<string> data = LoadSimple(line);
-          Packet p1 =  new Packet(data);
+          Packet p1 =  new Packet(data,line);
 
           line = sr.ReadLine();
           data = LoadSimple(line);
-          Packet p2 = new Packet(data);
+          Packet p2 = new Packet(data, line);
           line = sr.ReadLine();
 
           if(p1.Compare(p2))
@@ -69,11 +69,11 @@ namespace SolverAOC2022_13
         while ((line = sr.ReadLine()) != null)
         {
           List<string> data = LoadSimple(line);
-          Packet p1 = new Packet(data);
+          Packet p1 = new Packet(data, line);
 
           line = sr.ReadLine();
           data = LoadSimple(line);
-          Packet p2 = new Packet(data);
+          Packet p2 = new Packet(data, line);
           line = sr.ReadLine();
 
           Packets.Add(p1);
@@ -81,10 +81,19 @@ namespace SolverAOC2022_13
         }
       }
 
-      Packets.Add(new Packet(LoadSimple("[[2]]")) { IsDividerPacket = true});
-      Packets.Add(new Packet(LoadSimple("[[6]]")) { IsDividerPacket = true });
+      Packets.Add(new Packet(LoadSimple("[[2]]"), "[[2]]") { IsDividerPacket = true});
+      Packets.Add(new Packet(LoadSimple("[[6]]"), "[[2]]") { IsDividerPacket = true });
 
       SortPackets(Packets);
+
+      StringBuilder sb = new StringBuilder();
+      foreach(Packet p in Packets)
+      {
+        sb.AppendLine(p.Line);
+      }
+      Console.WriteLine(sb.ToString());
+      Console.WriteLine();
+      Console.WriteLine();
 
       var ps = Packets.Where(x => x.IsDividerPacket).ToList();
       int val1 = Packets.IndexOf(ps[0]) + 1;
