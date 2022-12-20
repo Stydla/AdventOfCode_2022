@@ -30,5 +30,10 @@ namespace SolverAOC2022_15
       }
       return false;
     }
+
+    public override string ToString()
+    {
+      return $"[{Points[0].Value},{Points[1].Value}]";
+    }
   }
 }

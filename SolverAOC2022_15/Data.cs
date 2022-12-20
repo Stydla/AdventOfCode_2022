@@ -114,10 +114,12 @@ namespace SolverAOC2022_15
       }
       ips.Sort((x, y) =>
       {
-        if (x.Value < y.Value)
+        long val1 = x.Type == EIntervalPointType.Start ? x.Value : x.Value + 1;
+        long val2 = y.Type == EIntervalPointType.Start ? y.Value : y.Value + 1;
+        if (val1 < val2)
         {
           return -1;
-        } else if(x.Value > y.Value)
+        } else if(val1 > val2)
         {
           return 1;
         } else
@@ -179,21 +181,21 @@ namespace SolverAOC2022_15
     {
 
       long y = long.MinValue;
-      List<Interval> intervals = new List<Interval>();
-      for (long i = 0; i < MaxSize; i++)
-      {
-        intervals = GetIntervalsFor(i);
+      List<Interval> intervalsRes = new List<Interval>();
 
-        if(intervals.Count > 1)
+      Parallel.For(0, MaxSize, (i, loopstate) =>
+      {
+        List<Interval> intervals = GetIntervalsFor(i).Where(xx => xx.Points[1].Value >= 0).ToList();
+
+        if (intervals.Count > 1)
         {
           y = i;
-          break;
+          intervalsRes = intervals;
+          loopstate.Break();
         }
-      }
-
-      long x = intervals[0].Points[1].Value + 1;
-
-
+      });
+    
+      long x = intervalsRes[0].Points[1].Value + 1;
 
       return x * 4000000 + y;
     }
