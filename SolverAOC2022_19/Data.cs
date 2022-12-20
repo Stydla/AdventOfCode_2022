@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Threading.Tasks;
 
 namespace SolverAOC2022_19
 {
@@ -17,13 +19,21 @@ namespace SolverAOC2022_19
       int res = 0;
       using (StringReader sr = new StringReader(inputData))
       {
+        List<string> lines = new List<string>();
         string line;
         while ((line = sr.ReadLine()) != null)
         {
-          Factory f = new Factory(line);
+          lines.Add(line);
+        }
+
+        Parallel.For(0, lines.Count, (i) =>
+        {
+          string l = lines[i];
+          Factory f = new Factory(l);
           f.Simulate1(24);
           res += f.MaxGeodes * f.ID;
-        }
+        });
+          
       }
 
       return res;
@@ -36,13 +46,17 @@ namespace SolverAOC2022_19
       using (StringReader sr = new StringReader(inputData))
       {
         string line;
-        for(int i = 0; i < 3; i++)
+        Parallel.For(0, 3, (i) =>
         {
           line = sr.ReadLine();
           Factory f = new Factory(line);
           f.Simulate1(32);
           res *= f.MaxGeodes;
-        }
+        });
+        //for(int i = 0; i < 3; i++)
+        //{
+          
+        //}
       }
 
       return res;

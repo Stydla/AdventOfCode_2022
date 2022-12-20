@@ -23,7 +23,7 @@ namespace SolverAOC2022_19
     {
       Robots.Sort((x, y) => x.Type - y.Type);
 
-      return $"[{Day}][{string.Join("_", Robots)}][{Materials}]";
+      return $"{Day},{string.Join("_", Robots)},{Materials}";
     }
   }
 }
