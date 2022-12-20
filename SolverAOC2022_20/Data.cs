@@ -65,41 +65,41 @@ namespace SolverAOC2022_20
       long val = n.Value % (Nodes.Count - 1);
       for (int j = 0; j < Math.Abs(val); j++)
       {
-        if (val < 0)
+        if(val < 0)
         {
-          Node prev = current.Prev;
-          Node prevPrev = current.Prev.Prev;
-          Node next = current.Next;
-
-          prevPrev.Next = current;
-
-          current.Prev = prevPrev;
-          current.Next = prev;
-
-          prev.Prev = current;
-          prev.Next = next;
-
-          next.Prev = prev;
-
-        }
-        else
+          current = current.Prev;
+        } else
         {
-          Node prev = current.Prev;
-          Node next = current.Next;
-          Node nextNext = current.Next.Next;
-
-          prev.Next = next;
-
-          next.Prev = prev;
-          next.Next = current;
-
-          current.Prev = next;
-          current.Next = nextNext;
-
-          nextNext.Prev = current;
+          current = current.Next;
         }
       }
+      if(val < 0)
+      {
+        MoveNodeBefore(n, current);
+      } 
+      else
+      {
+        MoveNodeBefore(n, current.Next);
+      }
+      
     }
+
+    private void MoveNodeBefore(Node movedNode, Node targetNode)
+    {
+      Node movedPrev = movedNode.Prev;
+      Node movedNext = movedNode.Next;
+
+      movedPrev.Next = movedNext;
+      movedNext.Prev = movedPrev;
+
+      Node targetPrev = targetNode.Prev;
+
+      targetPrev.Next = movedNode;
+      movedNode.Prev = targetPrev;
+      movedNode.Next = targetNode;
+      targetNode.Prev = movedNode;
+    }
+
 
     private void Print(Node start, int cnt)
     {
