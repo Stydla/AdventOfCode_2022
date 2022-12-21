@@ -13,6 +13,7 @@ namespace SolverAOC2022_21
     public List<Node> Nodes { get; set; } = new List<Node>();
 
     public Node Root { get; set; }
+    public Node Human { get; set; }
 
     public Data(string inputData)
     {
@@ -55,6 +56,7 @@ namespace SolverAOC2022_21
       }
 
       Root = Nodes.First(x => x.Name == "root");
+      Human = Nodes.First(x => x.Name == "humn");
 
     }
 
@@ -76,7 +78,18 @@ namespace SolverAOC2022_21
 
     internal long Solve2()
     {
-      throw new NotImplementedException();
+      Human.Type = ENodeType.Value;
+      Root.Type = ENodeType.Equal;
+
+      Root.Solve();
+
+      Human.SetUnknownPath();
+
+      Root.SolveTopDown(0);
+
+      long res = Root.Solve();
+
+      return Human.Value;
     }
   }
 }

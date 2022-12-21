@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace SolverAOC2022_21
@@ -19,7 +20,7 @@ namespace SolverAOC2022_21
     public Node RightChild { get; set; }
     public Node Parent { get; set; }
 
-    public bool Solved { get; set; } = false;
+    public bool IsUnknown { get; set; } = false;
 
     public Node(string name)
     {
@@ -41,17 +42,17 @@ namespace SolverAOC2022_21
       return Type == ENodeType.Value;
     }
 
+    
+
     public long Solve()
     {
       if (Type == ENodeType.Value)
       {
-        Solved = true;
         return Value;
       }
  
       long valLeft = Value = LeftChild.Solve();
       long valRight = Value = RightChild.Solve();
-      Solved = true;
 
       switch (Type)
       {
@@ -66,6 +67,9 @@ namespace SolverAOC2022_21
           break;
         case ENodeType.Divide:
           Value = valLeft / valRight;
+          break;
+        case ENodeType.Equal:
+          Value = valLeft - valRight;
           break;
         case ENodeType.Value:
           throw new Exception($"Incorrect type {Type}");
@@ -86,9 +90,77 @@ namespace SolverAOC2022_21
           return ENodeType.Multiply;
         case "/":
           return ENodeType.Divide;
+        case "=":
+          return ENodeType.Equal;
         default:
           throw new Exception($"Unknown operation {operation}");
       }
+    }
+
+    internal void SetUnknownPath()
+    {
+
+      Node tmp = this;
+      this.IsUnknown = true;
+      tmp.Parent?.SetUnknownPath();
+      Console.WriteLine(this.Name);
+    }
+
+    internal void SolveTopDown(long targetValue)
+    {
+      if(LeftChild == null && RightChild == null)
+      {
+        Value = targetValue;
+        return;
+      }
+
+      if(LeftChild.IsUnknown && RightChild.IsUnknown)
+      {
+        throw new Exception($"Unknown childrens {this.Name}");
+      }
+
+      IsUnknown = false;
+
+      Node knownNode = LeftChild.IsUnknown?  RightChild : LeftChild;
+      Node unknownNode = LeftChild.IsUnknown ? LeftChild : RightChild;
+      long knownValue = knownNode.Value;
+      
+
+      switch (Type)
+      {
+        case ENodeType.Plus:
+          unknownNode.SolveTopDown(targetValue - knownValue);
+          break;
+        case ENodeType.Minus:
+          if(unknownNode == RightChild)
+          {
+            unknownNode.SolveTopDown(knownValue - targetValue);
+          } 
+          else
+          {
+            unknownNode.SolveTopDown(targetValue + knownValue);
+          }
+          break;
+        case ENodeType.Multiply:
+          unknownNode.SolveTopDown(targetValue / knownValue);
+          break;
+        case ENodeType.Divide:
+          if (unknownNode == RightChild)
+          {
+            unknownNode.SolveTopDown(knownValue / targetValue);
+          } 
+          else
+          {
+            unknownNode.SolveTopDown(targetValue * knownValue);
+          }
+          break;
+        case ENodeType.Value:
+          throw new Exception("Invalid solve TopDown");
+        case ENodeType.Equal:
+          unknownNode.SolveTopDown(knownValue);
+          break;
+      }
+      
     }
   }
 
@@ -98,6 +170,7 @@ namespace SolverAOC2022_21
     Minus,
     Multiply,
     Divide,
-    Value
+    Value,
+    Equal
   }
 }
