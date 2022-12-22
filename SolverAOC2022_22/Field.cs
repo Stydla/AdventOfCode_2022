@@ -11,7 +11,7 @@ namespace SolverAOC2022_22
 
     public EFieldType Type { get; set; }
 
-    public Dictionary<EDirection, Field> Neighbours { get; set; } = new Dictionary<EDirection, Field>();
+    public Dictionary<EDirection, FieldDirection> NeighbourDirections { get; set; } = new Dictionary<EDirection, FieldDirection>();
     public char Value
     {
       get

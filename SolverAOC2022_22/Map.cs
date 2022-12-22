@@ -73,11 +73,10 @@ namespace SolverAOC2022_22
       MaxColumn = AllFields.Max(x => x.Column);
       MaxRow = AllFields.Max(x => x.Row);
 
-      InitNeighbours();
 
     }
 
-    private void InitNeighbours()
+    private void InitNeighbours1()
     {
       foreach(Field f in AllFields)
       {
@@ -92,7 +91,7 @@ namespace SolverAOC2022_22
           hash = Field.GetCoordsHash(index, f.Column);
           DictFields.TryGetValue(hash, out tmp);
         }
-        f.Neighbours.Add(EDirection.UP, tmp);
+        f.NeighbourDirections.Add(EDirection.UP, new FieldDirection(tmp, ERotation.NONE));
 
         //RIGHT
         hash = Field.GetCoordsHash(f.Row, f.Column + 1);
@@ -102,7 +101,7 @@ namespace SolverAOC2022_22
           hash = Field.GetCoordsHash(f.Row, index);
           DictFields.TryGetValue(hash, out tmp);
         }
-        f.Neighbours.Add(EDirection.RIGHT, tmp);
+        f.NeighbourDirections.Add(EDirection.RIGHT, new FieldDirection(tmp, ERotation.NONE));
 
         //DOWN
         hash = Field.GetCoordsHash(f.Row + 1, f.Column);
@@ -112,7 +111,7 @@ namespace SolverAOC2022_22
           hash = Field.GetCoordsHash(index, f.Column);
           DictFields.TryGetValue(hash, out tmp);
         }
-        f.Neighbours.Add(EDirection.DOWN, tmp);
+        f.NeighbourDirections.Add(EDirection.DOWN, new FieldDirection(tmp, ERotation.NONE));
 
         //LEFT
         hash = Field.GetCoordsHash(f.Row, f.Column - 1);
@@ -122,7 +121,7 @@ namespace SolverAOC2022_22
           hash = Field.GetCoordsHash(f.Row, index);
           DictFields.TryGetValue(hash, out tmp);
         }
-        f.Neighbours.Add(EDirection.LEFT, tmp);
+        f.NeighbourDirections.Add(EDirection.LEFT, new FieldDirection(tmp, ERotation.NONE));
       }
     }
 
@@ -130,7 +129,8 @@ namespace SolverAOC2022_22
 
     public void Solve1()
     {
-      while(!Path.IsFinished())
+      InitNeighbours1();
+      while (!Path.IsFinished())
       {
         PathStep ps = Path.GetNextPathStep();
 
@@ -160,6 +160,197 @@ namespace SolverAOC2022_22
       Console.WriteLine(sb.ToString());
     }
 
+    internal void Solve2()
+    {
+      InitNeighbours2();
+      while (!Path.IsFinished())
+      {
+        PathStep ps = Path.GetNextPathStep();
 
+        Player.Move(ps);
+      }
+    }
+
+    private void InitNeighbours2()
+    {
+      if(AllFields.Count == 96 )
+      {
+        InitNeighbours2Test();
+      } else
+      {
+        InitNeighbours2Task2();
+      }
+    }
+
+    private void InitCommonNeighbours()
+    {
+      foreach (Field f in AllFields)
+      {
+        Field tmp;
+        int hash;
+
+        //UP
+        hash = Field.GetCoordsHash(f.Row - 1, f.Column);
+        if (DictFields.TryGetValue(hash, out tmp))
+        {
+          f.NeighbourDirections.Add(EDirection.UP, new FieldDirection(tmp, ERotation.NONE));
+        }
+
+        //RIGHT
+        hash = Field.GetCoordsHash(f.Row, f.Column + 1);
+        if (DictFields.TryGetValue(hash, out tmp))
+        {
+          f.NeighbourDirections.Add(EDirection.RIGHT, new FieldDirection(tmp, ERotation.NONE));
+        }
+
+        //DOWN
+        hash = Field.GetCoordsHash(f.Row + 1, f.Column);
+        if (DictFields.TryGetValue(hash, out tmp))
+        {
+          f.NeighbourDirections.Add(EDirection.DOWN, new FieldDirection(tmp, ERotation.NONE));
+        }
+
+        //LEFT
+        hash = Field.GetCoordsHash(f.Row, f.Column - 1);
+        if (DictFields.TryGetValue(hash, out tmp))
+        {
+          f.NeighbourDirections.Add(EDirection.LEFT, new FieldDirection(tmp, ERotation.NONE));
+        }
+      }
+    }
+
+    private void InitNeighbours2Task2()
+    {
+      InitCommonNeighbours();
+
+      List<int> colStart = new List<int>() { 1, 51, 101 };
+      List<int> colEnd = new List<int>() { 50, 100, 150 };
+      List<int> rowStart = new List<int>() { 1, 51, 101, 151 };
+      List<int> rowEnd = new List<int>() { 50, 100, 150, 200 };
+
+      for (int i = 0; i < 50; i++)
+      {
+        Field f1 = DictFields[Field.GetCoordsHash(rowStart[0], colStart[1] + i)];
+        Field f2 = DictFields[Field.GetCoordsHash(rowStart[3] + i, colStart[0])];
+        f1.NeighbourDirections.Add(EDirection.UP, new FieldDirection(f2, ERotation.RIGHT));
+        f2.NeighbourDirections.Add(EDirection.LEFT, new FieldDirection(f1, ERotation.LEFT));
+      }
+
+      for (int i = 0; i < 50; i++)
+      {
+        Field f1 = DictFields[Field.GetCoordsHash(rowStart[0] + i, colStart[1])];
+        Field f2 = DictFields[Field.GetCoordsHash(rowEnd[2] - i, colStart[0])];
+        f1.NeighbourDirections.Add(EDirection.LEFT, new FieldDirection(f2, ERotation.OPOSITE));
+        f2.NeighbourDirections.Add(EDirection.LEFT, new FieldDirection(f1, ERotation.OPOSITE));
+      }
+
+      for (int i = 0; i < 50; i++)
+      {
+        Field f1 = DictFields[Field.GetCoordsHash(rowStart[0], colStart[2] + i)];
+        Field f2 = DictFields[Field.GetCoordsHash(rowEnd[3], colStart[0] + i)];
+        f1.NeighbourDirections.Add(EDirection.UP, new FieldDirection(f2, ERotation.NONE));
+        f2.NeighbourDirections.Add(EDirection.DOWN, new FieldDirection(f1, ERotation.NONE));
+      }
+
+      for (int i = 0; i < 50; i++)
+      {
+        Field f1 = DictFields[Field.GetCoordsHash(rowStart[0] + i, colEnd[2])];
+        Field f2 = DictFields[Field.GetCoordsHash(rowEnd[2] - i, colEnd[1])];
+        f1.NeighbourDirections.Add(EDirection.RIGHT, new FieldDirection(f2, ERotation.OPOSITE));
+        f2.NeighbourDirections.Add(EDirection.RIGHT, new FieldDirection(f1, ERotation.OPOSITE));
+      }
+
+
+
+
+      for (int i = 0; i < 50; i++)
+      {
+        Field f1 = DictFields[Field.GetCoordsHash(rowEnd[0], colStart[2] + i)];
+        Field f2 = DictFields[Field.GetCoordsHash(rowStart[1] + i, colEnd[1])];
+        f1.NeighbourDirections.Add(EDirection.DOWN, new FieldDirection(f2, ERotation.RIGHT));
+        f2.NeighbourDirections.Add(EDirection.RIGHT, new FieldDirection(f1, ERotation.LEFT));
+      }
+
+      for (int i = 0; i < 50; i++)
+      {
+        Field f1 = DictFields[Field.GetCoordsHash(rowStart[1] + i, colStart[1])];
+        Field f2 = DictFields[Field.GetCoordsHash(rowStart[2], colStart[0] + i)];
+        f1.NeighbourDirections.Add(EDirection.LEFT, new FieldDirection(f2, ERotation.LEFT));
+        f2.NeighbourDirections.Add(EDirection.UP, new FieldDirection(f1, ERotation.RIGHT));
+      }
+
+      for (int i = 0; i < 50; i++)
+      {
+        Field f1 = DictFields[Field.GetCoordsHash(rowEnd[2], colStart[1] + i)];
+        Field f2 = DictFields[Field.GetCoordsHash(rowStart[3] + i, colEnd[0])];
+        f1.NeighbourDirections.Add(EDirection.DOWN, new FieldDirection(f2, ERotation.RIGHT));
+        f2.NeighbourDirections.Add(EDirection.RIGHT, new FieldDirection(f1, ERotation.LEFT));
+      }
+
+    }
+
+    private void InitNeighbours2Test()
+    {
+      InitCommonNeighbours();
+
+      for (int i = 0; i < 4; i++)
+      {
+        Field f1 = DictFields[Field.GetCoordsHash(5 + i, 12)];
+        Field f2 = DictFields[Field.GetCoordsHash(9, 16 - i)];
+        f1.NeighbourDirections.Add(EDirection.RIGHT, new FieldDirection(f2, ERotation.RIGHT));
+        f2.NeighbourDirections.Add(EDirection.UP, new FieldDirection(f1, ERotation.LEFT));
+      }
+
+      for (int i = 0; i < 4; i++)
+      {
+        Field f1 = DictFields[Field.GetCoordsHash(1, i + 9)];
+        Field f2 = DictFields[Field.GetCoordsHash(5, 4 - i)];
+        f1.NeighbourDirections.Add(EDirection.UP, new FieldDirection(f2, ERotation.OPOSITE));
+        f2.NeighbourDirections.Add(EDirection.UP, new FieldDirection(f1, ERotation.OPOSITE));
+      }
+
+      for (int i = 0; i < 4; i++)
+      {
+        Field f1 = DictFields[Field.GetCoordsHash(1 + i, 9)];
+        Field f2 = DictFields[Field.GetCoordsHash(5, 5 + i)];
+        f1.NeighbourDirections.Add(EDirection.LEFT, new FieldDirection(f2, ERotation.LEFT));
+        f2.NeighbourDirections.Add(EDirection.UP, new FieldDirection(f1, ERotation.RIGHT));
+      }
+
+      for (int i = 0; i < 4; i++)
+      {
+        Field f1 = DictFields[Field.GetCoordsHash(1 + i, 12)];
+        Field f2 = DictFields[Field.GetCoordsHash(9 + i, 16)];
+        f1.NeighbourDirections.Add(EDirection.RIGHT, new FieldDirection(f2, ERotation.OPOSITE));
+        f2.NeighbourDirections.Add(EDirection.RIGHT, new FieldDirection(f1, ERotation.OPOSITE));
+      }
+
+      for (int i = 0; i < 4; i++)
+      {
+        Field f1 = DictFields[Field.GetCoordsHash(5 + i, 1)];
+        Field f2 = DictFields[Field.GetCoordsHash(12, 13 + i)];
+        f1.NeighbourDirections.Add(EDirection.LEFT, new FieldDirection(f2, ERotation.RIGHT));
+        f2.NeighbourDirections.Add(EDirection.DOWN, new FieldDirection(f1, ERotation.LEFT));
+      }
+
+      for (int i = 0; i < 4; i++)
+      {
+        Field f1 = DictFields[Field.GetCoordsHash(8, 1 + i )];
+        Field f2 = DictFields[Field.GetCoordsHash(12, 12 - i)];
+        f1.NeighbourDirections.Add(EDirection.DOWN, new FieldDirection(f2, ERotation.OPOSITE));
+        f2.NeighbourDirections.Add(EDirection.DOWN, new FieldDirection(f1, ERotation.OPOSITE));
+      }
+
+      for (int i = 0; i < 4; i++)
+      {
+        Field f1 = DictFields[Field.GetCoordsHash(8, 5 + i)];
+        Field f2 = DictFields[Field.GetCoordsHash(12 - i, 9)];
+        f1.NeighbourDirections.Add(EDirection.DOWN, new FieldDirection(f2, ERotation.LEFT));
+        f2.NeighbourDirections.Add(EDirection.LEFT, new FieldDirection(f1, ERotation.RIGHT));
+      }
+
+      
+
+    }
   }
 }

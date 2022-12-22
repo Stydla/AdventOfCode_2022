@@ -24,7 +24,13 @@ namespace SolverAOC2022_22
 
     internal int Solve2()
     {
-      throw new NotImplementedException();
+      Map m = new Map(inputData);
+
+      m.Solve2();
+
+      Field f = m.Player.Field;
+
+      return f.Row * 1000 + f.Column * 4 + (int)m.Player.Direction;
     }
   }
 }

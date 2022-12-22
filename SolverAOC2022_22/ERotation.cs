@@ -5,5 +5,6 @@
     NONE,
     LEFT,
     RIGHT,
+    OPOSITE
   }
 }

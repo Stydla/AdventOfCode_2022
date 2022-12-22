@@ -21,15 +21,16 @@ namespace SolverAOC2022_22
       Direction = GetNewDirection(ps.Rotation);  
       for(int i = 0; i < ps.Count; i++)
       {
-        Field nextField = Field.Neighbours[Direction];
+        FieldDirection fd = Field.NeighbourDirections[Direction];
+        Field nextField = fd.Field;
         switch (nextField.Type)
         {
           case EFieldType.EMPTY:
             Field = nextField;
+            Direction = GetNewDirection(fd.Rotation);
             break;
           case EFieldType.WALL:
             return;
-            break;
         }
       }
     }
@@ -44,6 +45,8 @@ namespace SolverAOC2022_22
           return (EDirection)(((int)Direction - 1 + 4) % 4);
         case ERotation.RIGHT:
           return (EDirection)(((int)Direction + 1) % 4);
+        case ERotation.OPOSITE:
+          return (EDirection)(((int)Direction + 2) % 4);
         default:
           throw new Exception($"Invalid rotation {rotation}");
       }
