@@ -77,6 +77,15 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Data.cs" />
+    <Compile Include="EDirection.cs" />
+    <Compile Include="EFieldType.cs" />
+    <Compile Include="ERotation.cs" />
+    <Compile Include="Field.cs" />
+    <Compile Include="Map.cs" />
+    <Compile Include="Path.cs" />
+    <Compile Include="PathStep.cs" />
+    <Compile Include="Player.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
