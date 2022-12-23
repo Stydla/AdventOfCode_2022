@@ -77,6 +77,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Consideration.cs" />
+    <Compile Include="Data.cs" />
+    <Compile Include="EDirection.cs" />
+    <Compile Include="Elf.cs" />
+    <Compile Include="Field.cs" />
+    <Compile Include="Map.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
