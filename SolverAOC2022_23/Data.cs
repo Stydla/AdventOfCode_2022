@@ -16,45 +16,40 @@ namespace SolverAOC2022_23
     internal int Solve1()
     {
       Map m = new Map(inputData);
-      m.Print(0);
       for (int i = 0; i < 10; i++)
       {
 
-        List<List<Consideration>> allConsiderations = new List<List<Consideration>>();
+        List<Consideration> allConsiderations = new List<Consideration>();
         List<Elf> onlyUpdateOrder = new List<Elf>();
         foreach(Elf elf in m.AllElves)
         {
-          List<Consideration> considerations = elf.Consider(m);
-          if(considerations != null)
+          Consideration consideration = elf.Consider(m);
+          if(consideration != null)
           {
-            if(considerations.Count == 0)
+            if (consideration.TargetField == null)
             {
               onlyUpdateOrder.Add(elf);
             } else
             {
-              allConsiderations.Add(considerations);
-            }
-          } 
-        }
-
-        foreach(List<Consideration> considerations in allConsiderations)
-        {
-          foreach(Consideration consideration in considerations)
-          {
-            if (allConsiderations.SelectMany(x => x).Count(x=>x.TargetField.Equals(consideration.TargetField)) == 1)
-            {
-              consideration.Execute(m);
-              break;
+              allConsiderations.Add(consideration);
             }
           }
-          considerations[0].Elf.UpdateConsiderOrder();
         }
 
-        foreach(Elf elf in onlyUpdateOrder)
+        var groups = allConsiderations.GroupBy(x => x.TargetField);
+        foreach (var group in groups)
         {
-          elf.UpdateConsiderOrder();
+          if(group.Count() == 1)
+          {
+            Consideration c = group.First();
+            c.Execute(m);
+          }
         }
-        m.Print(i + 1);
+
+        foreach(Elf e in m.AllElves)
+        {
+          e.UpdateConsiderOrder();
+        }
       }
       
       return m.GetEmptyFieldCount();
@@ -62,7 +57,52 @@ namespace SolverAOC2022_23
 
     internal int Solve2()
     {
-      throw new NotImplementedException();
+      Map m = new Map(inputData);
+
+      int round = 0; 
+      while(true)
+      {
+        round++;
+        List<Consideration> allConsiderations = new List<Consideration>();
+        List<Elf> onlyUpdateOrder = new List<Elf>();
+        foreach (Elf elf in m.AllElves)
+        {
+          Consideration consideration = elf.Consider(m);
+          if (consideration != null)
+          {
+            if (consideration.TargetField == null)
+            {
+              onlyUpdateOrder.Add(elf);
+            }
+            else
+            {
+              allConsiderations.Add(consideration);
+            }
+          }
+        }
+
+        if(allConsiderations.Count == 0)
+        {
+          break;
+        }
+
+        var groups = allConsiderations.GroupBy(x => x.TargetField);
+        foreach (var group in groups)
+        {
+          if (group.Count() == 1)
+          {
+            Consideration c = group.First();
+            c.Execute(m);
+          }
+        }
+
+        foreach (Elf e in m.AllElves)
+        {
+          e.UpdateConsiderOrder();
+        }
+      }
+
+      return round;
     }
   }
 }

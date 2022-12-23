@@ -28,7 +28,7 @@ namespace SolverAOC2022_23
       Position = new Field(position.X, position.Y);
     }
 
-    public List<Consideration> Consider(Map map)
+    public Consideration Consider(Map map)
     {
 
       bool AllEmpty = true;
@@ -45,7 +45,7 @@ namespace SolverAOC2022_23
         return null;
       }
 
-      List<Consideration> considerations = new List<Consideration>();
+      Consideration consideration = null;
       for(int i = 0; i < ConsiderOrder.Count; i++)
       {
         EDirection dir = ConsiderOrder[i];
@@ -55,7 +55,8 @@ namespace SolverAOC2022_23
               !map.ElvesByPosition.ContainsKey(Position.GetField(EDirection.NorthWest)) &&
               !map.ElvesByPosition.ContainsKey(Position.GetField(EDirection.NorthEast)))
           {
-            considerations.Add(new Consideration(Position.GetField(EDirection.North), this, EDirection.North));
+            consideration = new Consideration(Position.GetField(EDirection.North), this, EDirection.North);
+            break;
           }
         } 
         else if (dir == EDirection.South)
@@ -64,7 +65,8 @@ namespace SolverAOC2022_23
             !map.ElvesByPosition.ContainsKey(Position.GetField(EDirection.SouthWest)) &&
             !map.ElvesByPosition.ContainsKey(Position.GetField(EDirection.SouthEast)))
           {
-            considerations.Add(new Consideration(Position.GetField(EDirection.South), this, EDirection.South));
+            consideration = new Consideration(Position.GetField(EDirection.South), this, EDirection.South);
+            break;
           } 
         } 
         else if (dir == EDirection.West)
@@ -73,7 +75,8 @@ namespace SolverAOC2022_23
               !map.ElvesByPosition.ContainsKey(Position.GetField(EDirection.SouthWest)) &&
               !map.ElvesByPosition.ContainsKey(Position.GetField(EDirection.NorthWest)))
           {
-            considerations.Add(new Consideration(Position.GetField(EDirection.West), this, EDirection.West));
+            consideration = new Consideration(Position.GetField(EDirection.West), this, EDirection.West);
+            break;
           }
         }
         else if(dir == EDirection.East)
@@ -82,14 +85,19 @@ namespace SolverAOC2022_23
              !map.ElvesByPosition.ContainsKey(Position.GetField(EDirection.SouthEast)) &&
              !map.ElvesByPosition.ContainsKey(Position.GetField(EDirection.NorthEast)))
           {
-            considerations.Add(new Consideration(Position.GetField(EDirection.East), this, EDirection.East));
+            consideration = new Consideration(Position.GetField(EDirection.East), this, EDirection.East);
+            break;
           }
         } else
         {
           throw new Exception($"Unknow consider state: {dir}");
         }  
       }
-      return considerations;
+      if(consideration == null)
+      {
+        consideration = new Consideration(null, null, EDirection.East);
+      }
+      return consideration;
     }
 
     public override string ToString()

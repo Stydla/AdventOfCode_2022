@@ -39,19 +39,19 @@ namespace SolverAOC2022_23
         case EDirection.North:
           return new Field(X, Y - 1);
         case EDirection.NorthWest:
-          return new Field(X + 1, Y - 1);
+          return new Field(X - 1, Y - 1);
         case EDirection.West:
-          return new Field(X + 1, Y);
+          return new Field(X - 1, Y);
         case EDirection.SouthWest:
-          return new Field(X + 1, Y + 1);
+          return new Field(X - 1, Y + 1);
         case EDirection.South:
           return new Field(X, Y + 1);
         case EDirection.SouthEast:
-          return new Field(X - 1, Y + 1);
+          return new Field(X + 1, Y + 1);
         case EDirection.East:
-          return new Field(X - 1, Y);
+          return new Field(X + 1, Y);
         case EDirection.NorthEast:
-          return new Field(X - 1, Y - 1);
+          return new Field(X + 1, Y - 1);
         default:
           throw new Exception($"Invalid direction {dir}");
       }

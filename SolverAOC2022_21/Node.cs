@@ -103,7 +103,6 @@ namespace SolverAOC2022_21
       Node tmp = this;
       this.IsUnknown = true;
       tmp.Parent?.SetUnknownPath();
-      Console.WriteLine(this.Name);
     }
 
     internal void SolveTopDown(long targetValue)
