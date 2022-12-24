@@ -83,6 +83,7 @@
     <Compile Include="EFieldType.cs" />
     <Compile Include="Field.cs" />
     <Compile Include="Map.cs" />
+    <Compile Include="MapStateData.cs" />
     <Compile Include="Player.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

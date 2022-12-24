@@ -8,9 +8,32 @@ namespace SolverAOC2022_24
 {
   public enum EDirection
   {
-    UP = 0,
+    DOWN = 0,
     RIGHT = 1,
-    DOWN = 2,
-    LEFT = 3
+    LEFT = 2,
+    UP = 3,
+    NONE = 100
+  }
+
+  public static class Extensions
+  {
+    public static EDirection GetOpposite(this EDirection dir)
+    {
+      switch (dir)
+      {
+        case EDirection.UP:
+          return EDirection.DOWN;
+        case EDirection.RIGHT:
+          return EDirection.LEFT;
+        case EDirection.DOWN:
+          return EDirection.UP;
+        case EDirection.LEFT:
+          return EDirection.RIGHT;
+        case EDirection.NONE:
+          return EDirection.NONE;
+        default:
+          throw new System.Exception($"Invalid direction {dir}");
+      }
+    }
   }
 }

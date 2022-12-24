@@ -22,6 +22,13 @@ namespace SolverAOC2022_24
       Type = type;
     }
 
+    public Field(Field source)
+    {
+      X = source.X;
+      Y = source.Y;
+      Type = source.Type;
+    }
+
     public override int GetHashCode()
     {
       return 65000 * X + Y;

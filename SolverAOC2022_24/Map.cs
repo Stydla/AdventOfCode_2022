@@ -1,4 +1,5 @@
 ﻿using System;
+using System.CodeDom.Compiler;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -9,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace SolverAOC2022_24
 {
-  internal class Map
+  internal partial class Map
   {
 
     public List<Blizzard> Blizzards { get; set; } = new List<Blizzard>();
@@ -22,6 +23,43 @@ namespace SolverAOC2022_24
 
     public Field FinishField { get; set; }
     public Field StartField { get; set; }
+
+    public int MapRepeat { get; set; }
+    public int Round { get; set; }
+
+    public Map(Map source)
+    {
+      
+      AllFields = source.AllFields.Select(x => new Field(x)).ToHashSet();
+      MaxX = source.MaxX;
+      MaxY = source.MaxY;
+      MapRepeat = source.MapRepeat;
+      Round = source.Round;
+
+      Field ff;
+      AllFields.TryGetValue(source.FinishField, out ff);
+      FinishField = ff;
+
+      Field sf;
+      AllFields.TryGetValue(source.StartField, out sf);
+      StartField = sf;
+
+      InitNeighbours();
+      InitLoopNeighbours();
+
+      Field playerField;
+      AllFields.TryGetValue(source.Player.Position, out playerField);
+      Player = new Player(playerField);
+
+      foreach (Blizzard b in source.Blizzards)
+      {
+        Field f;
+        AllFields.TryGetValue(b.Position, out f);
+        Blizzard tmp = new Blizzard(f, b.Direction);
+        Blizzards.Add(tmp);
+      }
+    }
+
 
     public Map(string input)
     {
@@ -53,6 +91,7 @@ namespace SolverAOC2022_24
                   Field f = new Field(i, y, EFieldType.EMPTY);
                   AllFields.Add(f);
                   Blizzard b = new Blizzard(f, EDirection.UP);
+                  Blizzards.Add(b);
                   break;
                 }
               case '>':
@@ -60,6 +99,7 @@ namespace SolverAOC2022_24
                   Field f = new Field(i, y, EFieldType.EMPTY);
                   AllFields.Add(f);
                   Blizzard b = new Blizzard(f, EDirection.RIGHT);
+                  Blizzards.Add(b);
                   break;
                 }
               case '<':
@@ -67,6 +107,7 @@ namespace SolverAOC2022_24
                   Field f = new Field(i, y, EFieldType.EMPTY);
                   AllFields.Add(f);
                   Blizzard b = new Blizzard(f, EDirection.LEFT);
+                  Blizzards.Add(b);
                   break;
                 }
               case 'v':
@@ -74,6 +115,7 @@ namespace SolverAOC2022_24
                   Field f = new Field(i, y, EFieldType.EMPTY);
                   AllFields.Add(f);
                   Blizzard b = new Blizzard(f, EDirection.DOWN);
+                  Blizzards.Add(b);
                   break;
                 }
               default:
@@ -102,8 +144,19 @@ namespace SolverAOC2022_24
       InitNeighbours();
       InitLoopNeighbours();
 
+      MapRepeat = LCM(MaxX - 1, MaxY - 1);
+      Round = 0;
 
-      Console.WriteLine(this);
+    }
+
+    
+    static int LCM(int a, int b)
+    {
+      return Math.Abs(a * b) / GCD(a, b);
+    }
+    static int GCD(int a, int b)
+    {
+      return b == 0 ? a : GCD(b, a % b);
     }
 
     private void InitLoopNeighbours()
@@ -205,28 +258,27 @@ namespace SolverAOC2022_24
         {
           f.Neighbours.Add(EDirection.UP, targetField);
         }
+
+        sourceField = new Field(f.X, f.Y, EFieldType.UNKNOWN);
+        if (AllFields.TryGetValue(sourceField, out targetField))
+        {
+          f.Neighbours.Add(EDirection.NONE, targetField);
+        }
       }
     }
+
 
     internal bool IsPlayerAtField(Field field)
     {
       return Player.Position.Equals(field);
     }
 
-    private string CreateMapHash()
+    public string GetMapHash()
     {
       StringBuilder sb = new StringBuilder();
       sb.Append(Player.Position);
-      foreach(Blizzard b in Blizzards)
-      {
-        sb.Append(b.Position);
-      }
+      sb.Append(Round % MapRepeat);
       return sb.ToString();
-    }
-
-    internal int Simulate()
-    {
-      throw new NotImplementedException();
     }
 
     public override string ToString()
@@ -258,6 +310,51 @@ namespace SolverAOC2022_24
       }
       return sb.ToString();
 
+    }
+
+    internal void SimulateBlizzards()
+    {
+      foreach (Blizzard b in this.Blizzards)
+      {
+        b.Move();
+      }
+    }
+
+    internal List<Field> GetNextPlayerPositions()
+    {
+      List<Field> ret = new List<Field>();
+      foreach (EDirection dir in Enum.GetValues(typeof(EDirection)))
+      {
+        bool move = this.Player.Move(dir);
+        if (move)
+        {
+          ret.Add(new Field(Player.Position));
+          this.Player.MoveBack(dir);
+        }
+      }
+      return ret;
+    }
+
+    internal void SetPlayerPosition(Field playerPosition)
+    {
+      Field f;
+      AllFields.TryGetValue(playerPosition, out f);
+      Player.Position = f;
+    }
+
+    internal void SetStartField(Field start)
+    {
+      Field f;
+      AllFields.TryGetValue(start, out f);
+      StartField= f;
+      Player.Position = f;
+    }
+
+    internal void SetFinishField(Field finish)
+    {
+      Field f;
+      AllFields.TryGetValue(finish, out f);
+      FinishField = f;
     }
   }
 }
