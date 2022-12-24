@@ -77,6 +77,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Blizzard.cs" />
+    <Compile Include="Data.cs" />
+    <Compile Include="EDirection.cs" />
+    <Compile Include="EFieldType.cs" />
+    <Compile Include="Field.cs" />
+    <Compile Include="Map.cs" />
+    <Compile Include="Player.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
